@@ -104,3 +104,11 @@ Docker image: [kushyarwar/is601-module11](https://hub.docker.com/r/kushyarwar/is
 ```bash
 docker pull kushyarwar/is601-module11:latest
 ```
+
+## CI/CD Screenshots
+
+### GitHub Actions – Successful Workflow Run
+![GitHub Actions](Screenshots/github%20actions.png)
+
+### Docker Hub – Image Successfully Pushed
+![Docker Hub](Screenshots/docker.png)

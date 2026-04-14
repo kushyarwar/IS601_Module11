@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import text
 from typing import List
 
 from app.database import engine, get_db
@@ -102,18 +101,18 @@ def delete_calculation(calc_id: int, db: Session = Depends(get_db)):
 
 @app.get("/calculations/join/all", response_model=List[schemas.CalculationWithUser])
 def calculations_with_users(db: Session = Depends(get_db)):
-    rows = db.execute(text("""
-        SELECT u.username, c.a, c.b, c.type, c.result
-        FROM calculations c
-        JOIN users u ON c.user_id = u.id
-    """)).fetchall()
+    rows = (
+        db.query(models.Calculation, models.User.username)
+        .join(models.User, models.Calculation.user_id == models.User.id)
+        .all()
+    )
     return [schemas.CalculationWithUser(
-        username=r.username,
-        a=r.a,
-        b=r.b,
-        type=r.type,
-        result=r.result,
-    ) for r in rows]
+        username=username,
+        a=calc.a,
+        b=calc.b,
+        type=calc.type,
+        result=calc.result,
+    ) for calc, username in rows]
 
 
 # ── Health ─────────────────────────────────────────────────────────────────
